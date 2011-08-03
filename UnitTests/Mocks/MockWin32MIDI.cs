@@ -21,8 +21,46 @@ namespace UnitTests
         public uint LastSentShortMsg_Data1 { get { return (lastSentShortMsg >> 8) & 0xff; } }
         public uint LastSentShortMsg_Data2 { get { return (lastSentShortMsg >> 16) & 0xff; } }
 
-        public uint NumOutDevs { get; set; }
-        public uint NumInDevs { get; set; }
+        List<bool> outDeviceOpen = new List<bool>();
+        List<bool> inDeviceOpen = new List<bool>();
+
+        uint numOutDevs;
+        public uint NumOutDevs
+        {
+            get
+            {
+                return numOutDevs;
+            }
+            set
+            {
+                numOutDevs = value;
+                outDeviceOpen.Clear();
+                for (int i = 0; i < numOutDevs; i++) outDeviceOpen.Add(false);
+            }
+        }
+
+        public List<bool> OutDeviceOpen
+        {
+            get
+            {
+                return outDeviceOpen;
+            }
+        }
+
+        uint numInDevs;
+        public uint NumInDevs
+        {
+            get
+            {
+                return numInDevs;
+            }
+            set
+            {
+                numInDevs = value;
+                inDeviceOpen.Clear();
+                for (int i = 0; i < numInDevs; i++) inDeviceOpen.Add(false);
+            }
+        }
 
         public MockWin32MIDI()
         {
@@ -42,19 +80,27 @@ namespace UnitTests
             lpMidiOutCaps = new InvokeLayer.MIDIOUTCAPS();
             lpMidiOutCaps.szPName = "MockWin32MIDI";
 
-            return 0;
+            return InvokeLayer.ErrorCodes.MMSYSERR_NOERROR;
         }
 
         public uint midiOutOpen(ref IntPtr lphmo, uint uDeviceID, InvokeLayer.MidiOutProc dwCallback, IntPtr dwCallbackInstance, uint dwFlags)
         {
             noteCall("midiOutOpen");
-            return 0;
+            if (uDeviceID >= numOutDevs)
+            {
+                return InvokeLayer.ErrorCodes.MMSYSERR_BADDEVICEID;
+            }
+            if (outDeviceOpen[(int)uDeviceID])
+            {
+                return InvokeLayer.ErrorCodes.MMSYSERR_ALLOCATED;
+            }
+            return InvokeLayer.ErrorCodes.MMSYSERR_NOERROR;
         }
 
         public uint midiOutClose(IntPtr hmo)
         {
             noteCall("midiOutClose");
-            return 0;
+            return InvokeLayer.ErrorCodes.MMSYSERR_NOERROR;
         }
 
         public uint midiOutMessage(IntPtr deviceID, uint msg, IntPtr dw1, IntPtr dw2)
@@ -63,14 +109,14 @@ namespace UnitTests
             lastSentMsg = msg;
             lastSentData1 = dw1;
             lastSentData2 = dw2;
-            return 0;
+            return InvokeLayer.ErrorCodes.MMSYSERR_NOERROR;
         }
 
         public uint midiOutShortMsg(IntPtr deviceID, uint dwMsg)
         {
             noteCall("midiOutShortMsg");
             lastSentShortMsg = dwMsg;
-            return 0;
+            return InvokeLayer.ErrorCodes.MMSYSERR_NOERROR;
         }
 
         public uint midiInGetNumDevs()
@@ -84,31 +130,31 @@ namespace UnitTests
             noteCall("midiInGetDevCaps");
             lpMidiInCaps = new InvokeLayer.MIDIINCAPS();
             lpMidiInCaps.szPName = "MockWin32MIDI";
-            return 0;
+            return InvokeLayer.ErrorCodes.MMSYSERR_NOERROR;
         }
 
         public uint midiInOpen(ref IntPtr lphMidiIn, uint uDeviceID, InvokeLayer.MidiInProc dwCallback, IntPtr dwCallbackInstance, uint dwFlags)
         {
             noteCall("midiInOpen");
-            return 0;
+            return InvokeLayer.ErrorCodes.MMSYSERR_NOERROR;
         }
 
         public uint midiInClose(IntPtr hMidiIn)
         {
             noteCall("midiInClose");
-            return 0;
+            return InvokeLayer.ErrorCodes.MMSYSERR_NOERROR;
         }
 
         public uint midiInStart(IntPtr hMidiIn)
         {
             noteCall("midiInStart");
-            return 0;
+            return InvokeLayer.ErrorCodes.MMSYSERR_NOERROR;
         }
 
         public uint midiInStop(IntPtr hMidiIn)
         {
             noteCall("midiInStop");
-            return 0;
+            return InvokeLayer.ErrorCodes.MMSYSERR_NOERROR;
         }
     }
 }

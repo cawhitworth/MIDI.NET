@@ -28,6 +28,17 @@ namespace ConsoleDemo
             {
                 Console.WriteLine(" - {0}", dev.DeviceName);
             }
+
+            devManager.OutDevices[0].Open();
+            try
+            {
+                devManager.OutDevices[0].Open();
+            }
+            catch (MIDIException e)
+            {
+                Console.WriteLine("Failed to open device twice, as expected: {0} (code {1}", e.Details, e.ErrorCode);
+            }
+
         }
     }
 }

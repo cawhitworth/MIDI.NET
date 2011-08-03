@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="DeviceManager.cs" />
     <Compile Include="InDevice.cs" />
+    <Compile Include="MIDIException.cs" />
     <Compile Include="Win32Layer\InvokeLayer.cs" />
     <Compile Include="Win32Layer\IWin32MIDI.cs" />
     <Compile Include="OutDevice.cs" />

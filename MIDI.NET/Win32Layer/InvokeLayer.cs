@@ -24,6 +24,13 @@ namespace MIDIDotNet
             public static uint CALLBACK_EVENT = 0x00050000;
         }
 
+        public static class ErrorCodes
+        {
+            public static uint MMSYSERR_NOERROR     = 0x00000000;
+            public static uint MMSYSERR_BADDEVICEID = 0x00000002;
+            public static uint MMSYSERR_ALLOCATED   = 0x00000004;
+        }
+
         [DllImport("winmm.dll")]
         public static extern uint midiInGetNumDevs();
 
