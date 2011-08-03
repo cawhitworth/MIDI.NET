@@ -40,9 +40,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="DeviceManagerTests.cs" />
+    <Compile Include="InDeviceTests.cs" />
     <Compile Include="MockBase.cs" />
     <Compile Include="MockWin32MIDI.cs" />
+    <Compile Include="OutDeviceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

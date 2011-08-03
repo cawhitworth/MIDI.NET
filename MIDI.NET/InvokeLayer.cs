@@ -37,7 +37,7 @@ namespace MIDIDotNet
             public ushort wPid;
             public uint vDriverVersion;
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = MAXPNAMELEN)]
-            public string szPname;
+            public string szPName;
             public uint dwSupport;
         };
 
@@ -68,7 +68,7 @@ namespace MIDIDotNet
             public ushort wVoices; // 12
             public ushort wNotes; // 14
             public ushort wChannelMask;  //16
-            public uint dwSpport; // 20
+            public uint dwSupport; // 20
         }
 
         [DllImport("winmm.dll", CharSet=CharSet.Auto)]

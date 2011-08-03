@@ -74,7 +74,7 @@ namespace UnitTests
         {
             noteCall("midiInGetDevCaps");
             lpMidiInCaps = new InvokeLayer.MIDIINCAPS();
-            lpMidiInCaps.szPname = "MockWin32MIDI";
+            lpMidiInCaps.szPName = "MockWin32MIDI";
             return 0;
         }
 
