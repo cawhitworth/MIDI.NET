@@ -94,6 +94,7 @@ namespace UnitTests
             {
                 return InvokeLayer.ErrorCodes.MMSYSERR_ALLOCATED;
             }
+            outDeviceOpen[(int)uDeviceID] = true;
             return InvokeLayer.ErrorCodes.MMSYSERR_NOERROR;
         }
 
