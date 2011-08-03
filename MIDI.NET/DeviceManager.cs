@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MIDIDotNet
 {
-    class DeviceManager
+    public class DeviceManager
     {
         List<InDevice> inDevices = new List<InDevice>();
         List<OutDevice> outDevices = new List<OutDevice>();

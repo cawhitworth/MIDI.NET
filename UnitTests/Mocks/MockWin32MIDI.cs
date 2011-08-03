@@ -8,23 +8,32 @@ namespace UnitTests
 {
     internal class MockWin32MIDI : MockBase, MIDIDotNet.IWin32MIDI
     {
-        uint m_lastSentMsg;
-        IntPtr m_lastSentData1;
-        IntPtr m_lastSentData2;
-        public uint LastSentMsg { get { return m_lastSentMsg; } }
-        public IntPtr LastSentData1 { get { return m_lastSentData1; } }
-        public IntPtr LastSentData2 { get { return m_lastSentData2; } }
+        uint lastSentMsg;
+        IntPtr lastSentData1;
+        IntPtr lastSentData2;
+        public uint LastSentMsg { get { return lastSentMsg; } }
+        public IntPtr LastSentData1 { get { return lastSentData1; } }
+        public IntPtr LastSentData2 { get { return lastSentData2; } }
 
-        uint m_lastSentShortMsg;
-        public uint LastSentShortMsg { get { return m_lastSentShortMsg; } }
-        public uint LastSentShortMsg_Status { get { return m_lastSentShortMsg & 0xff; } }
-        public uint LastSentShortMsg_Data1 { get { return (m_lastSentShortMsg >> 8) & 0xff; } }
-        public uint LastSentShortMsg_Data2 { get { return (m_lastSentShortMsg >> 16) & 0xff; } }
+        uint lastSentShortMsg;
+        public uint LastSentShortMsg { get { return lastSentShortMsg; } }
+        public uint LastSentShortMsg_Status { get { return lastSentShortMsg & 0xff; } }
+        public uint LastSentShortMsg_Data1 { get { return (lastSentShortMsg >> 8) & 0xff; } }
+        public uint LastSentShortMsg_Data2 { get { return (lastSentShortMsg >> 16) & 0xff; } }
+
+        public uint NumOutDevs { get; set; }
+        public uint NumInDevs { get; set; }
+
+        public MockWin32MIDI()
+        {
+            NumInDevs = 0;
+            NumOutDevs = 0;
+        }
 
         public uint midiOutGetNumDevs()
         {
             noteCall("midiOutGetNumDevs");
-            return 1;
+            return NumOutDevs;
         }
 
         public uint midiOutGetDevCaps(IntPtr uDeviceID, out InvokeLayer.MIDIOUTCAPS lpMidiOutCaps)
@@ -51,23 +60,23 @@ namespace UnitTests
         public uint midiOutMessage(IntPtr deviceID, uint msg, IntPtr dw1, IntPtr dw2)
         {
             noteCall("midiOutMessage");
-            m_lastSentMsg = msg;
-            m_lastSentData1 = dw1;
-            m_lastSentData2 = dw2;
+            lastSentMsg = msg;
+            lastSentData1 = dw1;
+            lastSentData2 = dw2;
             return 0;
         }
 
         public uint midiOutShortMsg(IntPtr deviceID, uint dwMsg)
         {
             noteCall("midiOutShortMsg");
-            m_lastSentShortMsg = dwMsg;
+            lastSentShortMsg = dwMsg;
             return 0;
         }
 
         public uint midiInGetNumDevs()
         {
             noteCall("midiInGetNumDevs");
-            return 1;
+            return NumInDevs;
         }
 
         public uint midiInGetDevCaps(IntPtr uDeviceID, out InvokeLayer.MIDIINCAPS lpMidiInCaps)
