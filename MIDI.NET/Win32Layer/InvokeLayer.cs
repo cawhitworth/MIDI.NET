@@ -24,7 +24,7 @@ namespace MIDIDotNet
             public static uint CALLBACK_EVENT = 0x00050000;
         }
 
-        public static class ErrorCodes
+        public static class ErrorCode
         {
             public static uint MMSYSERR_NOERROR     = 0x00000000;
             public static uint MMSYSERR_BADDEVICEID = 0x00000002;

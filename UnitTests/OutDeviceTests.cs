@@ -25,7 +25,8 @@ namespace UnitTests
             OutDevice dev = OutDevice.FromCaps(caps, win32Midi, deviceID);
             Assert.AreEqual(dev.DeviceName, deviceName);
         }
-        
+
+        #region Open Device Tests
         [Test]
         public void OpenOneDevice()
         {
@@ -44,24 +45,6 @@ namespace UnitTests
         }
 
         [Test]
-        public void OpenNonExistentDevice()
-        {
-            // Set up a framework with no devices
-            MockWin32MIDI win32Midi = new MockWin32MIDI();
-            win32Midi.NumOutDevs = 0;
-
-            // Construct a device that doesn't exist
-            // (this is pretty pathological, but it's possible someone could do it)
-            OutDevice dev = OutDevice.FromCaps(caps, win32Midi, 0);
-
-            // And try and open it
-            MIDIException e = Assert.Throws<MIDIException>( delegate { dev.Open(); } );
-
-            Assert.AreEqual(e.ErrorCode, InvokeLayer.ErrorCodes.MMSYSERR_BADDEVICEID);
-            Assert.AreEqual(win32Midi.callsTo("midiOutOpen"), 1);
-        }
-
-        [Test]
         public void OpenDeviceThatIsAlreadyOpen()
         {
             // Set up a framework with one device that is already open (perhaps by another application?)
@@ -75,8 +58,76 @@ namespace UnitTests
             // And try and open it
             MIDIException e = Assert.Throws<MIDIException>(delegate { dev.Open(); });
 
-            Assert.AreEqual(e.ErrorCode, InvokeLayer.ErrorCodes.MMSYSERR_ALLOCATED);
+            Assert.AreEqual(e.ErrorCode, InvokeLayer.ErrorCode.MMSYSERR_ALLOCATED);
             Assert.AreEqual(win32Midi.callsTo("midiOutOpen"), 1);
         }
+
+        [Test]
+        public void OpenNonExistentDevice()
+        {
+            // Set up a framework with no devices
+            MockWin32MIDI win32Midi = new MockWin32MIDI();
+            win32Midi.NumOutDevs = 0;
+
+            // Construct a device that doesn't exist
+            // (this is pretty pathological, but it's possible someone could do it)
+            OutDevice dev = OutDevice.FromCaps(caps, win32Midi, 0);
+
+            // And try and open it
+            MIDIException e = Assert.Throws<MIDIException>(delegate { dev.Open(); });
+
+            Assert.AreEqual(e.ErrorCode, InvokeLayer.ErrorCode.MMSYSERR_BADDEVICEID);
+            Assert.AreEqual(win32Midi.callsTo("midiOutOpen"), 1);
+        }
+
+        #endregion
+
+        #region Close device tests
+        [Test]
+        public void CloseDeviceThatWeDidNotOpen()
+        {
+            MockWin32MIDI win32Midi = new MockWin32MIDI();
+            win32Midi.NumOutDevs = 1;
+            win32Midi.OutDeviceOpen[0] = true;
+
+            OutDevice dev = OutDevice.FromCaps(caps, win32Midi, 0);
+
+            MIDIException e = Assert.Throws<MIDIException>( delegate { dev.Close(); } );
+
+            Assert.AreEqual(win32Midi.callsTo("midiOutClose"), 0);
+            Assert.AreEqual(e.ErrorCode, ErrorCode.MDNERR_INVALIDDEVICE);
+        }
+
+        [Test]
+        public void CloseDeviceThatWeOpened()
+        {
+            MockWin32MIDI win32Midi = new MockWin32MIDI();
+            win32Midi.NumOutDevs = 1;
+            OutDevice dev = OutDevice.FromCaps(caps, win32Midi, 0);
+            dev.Open();
+
+            Assert.DoesNotThrow(delegate { dev.Close(); });
+
+            Assert.AreEqual(win32Midi.callsTo("midiOutClose"), 1);
+        }
+        #endregion
+
+        #region Short message tests
+        [Test]
+        public void SendMessage_Simple()
+        {
+            MockWin32MIDI win32Midi = new MockWin32MIDI();
+            win32Midi.NumOutDevs = 1;
+            OutDevice dev = OutDevice.FromCaps(caps, win32Midi, 0);
+            dev.Open();
+
+            uint shortMsg = (uint)0x00800000;
+
+            dev.SendShortMsg(shortMsg);
+
+            Assert.AreEqual(win32Midi.callsTo("midiOutShortMsg"), 1);
+            Assert.AreEqual(win32Midi.LastSentShortMsg, shortMsg);
+        }
+        #endregion
     }
 }

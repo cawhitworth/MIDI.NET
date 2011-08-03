@@ -25,5 +25,16 @@ namespace MIDIDotNet
         {
             get { return errorCode; }
         }
+
+        public override string ToString()
+        {
+            return String.Format("MIDIException: {0}, code {1}", Details, ErrorCode.ToString("X8"));
+        }
+    }
+
+    public static class ErrorCode
+    {
+        public static uint MDNERR_INVALIDDEVICE = 0xf0000001;
+        public static uint MDNERR_DEVICENOTOPEN = 0xf0000001;
     }
 }

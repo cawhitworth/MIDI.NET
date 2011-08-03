@@ -80,7 +80,7 @@ namespace UnitTests
             lpMidiOutCaps = new InvokeLayer.MIDIOUTCAPS();
             lpMidiOutCaps.szPName = "MockWin32MIDI";
 
-            return InvokeLayer.ErrorCodes.MMSYSERR_NOERROR;
+            return InvokeLayer.ErrorCode.MMSYSERR_NOERROR;
         }
 
         public uint midiOutOpen(ref IntPtr lphmo, uint uDeviceID, InvokeLayer.MidiOutProc dwCallback, IntPtr dwCallbackInstance, uint dwFlags)
@@ -88,20 +88,21 @@ namespace UnitTests
             noteCall("midiOutOpen");
             if (uDeviceID >= numOutDevs)
             {
-                return InvokeLayer.ErrorCodes.MMSYSERR_BADDEVICEID;
+                return InvokeLayer.ErrorCode.MMSYSERR_BADDEVICEID;
             }
             if (outDeviceOpen[(int)uDeviceID])
             {
-                return InvokeLayer.ErrorCodes.MMSYSERR_ALLOCATED;
+                return InvokeLayer.ErrorCode.MMSYSERR_ALLOCATED;
             }
             outDeviceOpen[(int)uDeviceID] = true;
-            return InvokeLayer.ErrorCodes.MMSYSERR_NOERROR;
+            lphmo = (IntPtr)(uDeviceID + 1);
+            return InvokeLayer.ErrorCode.MMSYSERR_NOERROR;
         }
 
         public uint midiOutClose(IntPtr hmo)
         {
             noteCall("midiOutClose");
-            return InvokeLayer.ErrorCodes.MMSYSERR_NOERROR;
+            return InvokeLayer.ErrorCode.MMSYSERR_NOERROR;
         }
 
         public uint midiOutMessage(IntPtr deviceID, uint msg, IntPtr dw1, IntPtr dw2)
@@ -110,14 +111,14 @@ namespace UnitTests
             lastSentMsg = msg;
             lastSentData1 = dw1;
             lastSentData2 = dw2;
-            return InvokeLayer.ErrorCodes.MMSYSERR_NOERROR;
+            return InvokeLayer.ErrorCode.MMSYSERR_NOERROR;
         }
 
         public uint midiOutShortMsg(IntPtr deviceID, uint dwMsg)
         {
             noteCall("midiOutShortMsg");
             lastSentShortMsg = dwMsg;
-            return InvokeLayer.ErrorCodes.MMSYSERR_NOERROR;
+            return InvokeLayer.ErrorCode.MMSYSERR_NOERROR;
         }
 
         public uint midiInGetNumDevs()
@@ -131,31 +132,31 @@ namespace UnitTests
             noteCall("midiInGetDevCaps");
             lpMidiInCaps = new InvokeLayer.MIDIINCAPS();
             lpMidiInCaps.szPName = "MockWin32MIDI";
-            return InvokeLayer.ErrorCodes.MMSYSERR_NOERROR;
+            return InvokeLayer.ErrorCode.MMSYSERR_NOERROR;
         }
 
         public uint midiInOpen(ref IntPtr lphMidiIn, uint uDeviceID, InvokeLayer.MidiInProc dwCallback, IntPtr dwCallbackInstance, uint dwFlags)
         {
             noteCall("midiInOpen");
-            return InvokeLayer.ErrorCodes.MMSYSERR_NOERROR;
+            return InvokeLayer.ErrorCode.MMSYSERR_NOERROR;
         }
 
         public uint midiInClose(IntPtr hMidiIn)
         {
             noteCall("midiInClose");
-            return InvokeLayer.ErrorCodes.MMSYSERR_NOERROR;
+            return InvokeLayer.ErrorCode.MMSYSERR_NOERROR;
         }
 
         public uint midiInStart(IntPtr hMidiIn)
         {
             noteCall("midiInStart");
-            return InvokeLayer.ErrorCodes.MMSYSERR_NOERROR;
+            return InvokeLayer.ErrorCode.MMSYSERR_NOERROR;
         }
 
         public uint midiInStop(IntPtr hMidiIn)
         {
             noteCall("midiInStop");
-            return InvokeLayer.ErrorCodes.MMSYSERR_NOERROR;
+            return InvokeLayer.ErrorCode.MMSYSERR_NOERROR;
         }
     }
 }
