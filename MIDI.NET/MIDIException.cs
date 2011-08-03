@@ -34,7 +34,9 @@ namespace MIDIDotNet
 
     public static class ErrorCode
     {
-        public static uint MDNERR_INVALIDDEVICE = 0xf0000001;
-        public static uint MDNERR_DEVICENOTOPEN = 0xf0000001;
+        public static uint MDNERR_INVALIDDEVICE  = 0xf0000001;
+        public static uint MDNERR_DEVICENOTOPEN  = 0xf0000002;
+        
+        public static uint MDNERR_INVALIDCHANNEL = 0xf0010001;
     }
 }

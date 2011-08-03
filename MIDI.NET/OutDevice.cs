@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MIDIDotNet
 {
-    public class OutDevice
+    public class OutDevice : IOutDevice
     {
         private IWin32MIDI win32MIDI;
         private string deviceName;
