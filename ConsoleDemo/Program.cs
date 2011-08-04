@@ -29,7 +29,7 @@ namespace ConsoleDemo
             {
                 using (GMOutDevice gmOutDevice = new GMOutDevice(outDevice))
                 {
-                    Console.WriteLine("Device: {0}", gmOutDevice.DeviceName);
+                    Console.WriteLine("Device: {0} - {1}", gmOutDevice.DeviceName, InvokeLayer.MidiOutputDeviceType.Description[gmOutDevice.DeviceType]);
                     Console.WriteLine("{0} voices, {1} polyphony", gmOutDevice.Voices, gmOutDevice.Polyphony);
                     StringBuilder s = new StringBuilder("Channels: ");
                     for (int channel = 0; channel < 16; channel++)

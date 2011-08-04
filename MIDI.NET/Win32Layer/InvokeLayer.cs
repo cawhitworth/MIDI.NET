@@ -31,6 +31,19 @@ namespace MIDIDotNet
             public static uint MMSYSERR_ALLOCATED   = 0x00000004;
         }
 
+        public static class MidiOutputDeviceType
+        {
+            public static uint MOD_MIDIPORT = 1;
+            public static uint MOD_SYNTH = 2;
+            public static uint MOD_SQSYNTH = 3;
+            public static uint MOD_FMSYNTH = 4;
+            public static uint MOD_MAPPER = 5;
+            public static uint MOD_WAVETABLE = 6;
+            public static uint MOD_SWSYNTH = 7;
+
+            public static string[] Description = { "", "Port", "Synth", "Square-wave synth", "FM synth", "MIDI Mapper", "Wavetable synth", "Software synth" };
+        }
+
         [DllImport("winmm.dll")]
         public static extern uint midiInGetNumDevs();
 

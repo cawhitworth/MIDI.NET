@@ -15,6 +15,7 @@ namespace MIDIDotNet
         private bool open = false;
         private uint polyphony;
         private uint voices;
+        private uint deviceType;
         private bool[] channels = new bool[16];
 
         #region Constructors
@@ -32,6 +33,7 @@ namespace MIDIDotNet
             device.deviceName = caps.szPName;
             device.polyphony = caps.wNotes;
             device.voices = caps.wVoices;
+            device.deviceType = caps.wTechnology;
             for (int channel = 0; channel < 16; channel++)
             {
                 device.channels[channel] = (caps.wChannelMask & (1 << channel)) != 0;
@@ -72,6 +74,11 @@ namespace MIDIDotNet
         public bool[] Channel
         {
             get { return channels; }
+        }
+
+        public uint DeviceType
+        {
+            get { return deviceType; }
         }
 
         #region Public methods

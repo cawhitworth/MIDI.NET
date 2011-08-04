@@ -60,7 +60,12 @@ namespace UnitTests
         {
             get { return channels; }
         }
-        
+
+        public uint DeviceType
+        {
+            get { return 2; }
+        }
+
         public void Open()
         {
             noteCall("Open");

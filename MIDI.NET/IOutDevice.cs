@@ -12,6 +12,7 @@ namespace MIDIDotNet
         uint Polyphony { get; }
         uint Voices { get; }
         bool[] Channel { get; }
+        uint DeviceType { get; }
         void Open();
         void Close();
         void SendShortMsg(uint msg);
