@@ -21,7 +21,7 @@ namespace UnitTests
             }
         }
 
-        public void resetCalls()
+        public void clearCalls()
         {
             m_functionCount.Clear();
         }

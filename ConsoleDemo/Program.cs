@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using MIDIDotNet;
 
 namespace ConsoleDemo
@@ -29,16 +30,16 @@ namespace ConsoleDemo
                 Console.WriteLine(" - {0}", dev.DeviceName);
             }
 
-            devManager.OutDevices[0].Open();
-            try
+            GMOutDevice gmOutDevice = new GMOutDevice(devManager.OutDevices[0]);
+            gmOutDevice.Open();
+            for (int rep = 0; rep < 10; rep++)
             {
-                devManager.OutDevices[0].Open();
+                gmOutDevice.SendNoteOn(0, 50, 127);
+                Thread.Sleep(500);
+                gmOutDevice.SendNoteOff(0, 50, 0);
+                Thread.Sleep(500);
             }
-            catch (MIDIException e)
-            {
-                Console.WriteLine("Failed to open device twice, as expected: {0} (code {1}", e.Details, e.ErrorCode);
-            }
-
+            gmOutDevice.Close();
         }
     }
 }

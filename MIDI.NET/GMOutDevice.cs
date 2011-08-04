@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MIDIDotNet
 {
-    class GMOutDevice : IOutDevice
+    public class GMOutDevice : IOutDevice
     {
         IOutDevice outDevice;
 
@@ -26,9 +26,42 @@ namespace MIDIDotNet
         {
             if (channel > 0x0f)
             {
-                throw new MIDIException("Invalid channel", ErrorCode.MDNERR_INVALIDCHANNEL);
+                throw new MIDIException("Invalid channel", ErrorCode.MDNERR_GM_INVALIDCHANNEL);
             }
+            
+            if (note > 0x7f)
+            {
+                throw new MIDIException("Invalid note", ErrorCode.MDNERR_GM_INVALIDNOTE);
+            }
+
+            if (velocity > 0x7f)
+            {
+                throw new MIDIException("Invalid velocity", ErrorCode.MDNERR_GM_INVALIDVELOCITY);
+            }
+
             uint msg = ((uint)0x90 | channel) | ((uint)note << 8) | ((uint)velocity << 16);
+
+            SendShortMsg(msg);
+        }
+
+        public void SendNoteOff(byte channel, byte note, byte velocity)
+        {
+            if (channel > 0x0f)
+            {
+                throw new MIDIException("Invalid channel", ErrorCode.MDNERR_GM_INVALIDCHANNEL);
+            }
+            
+            if (note > 0x7f)
+            {
+                throw new MIDIException("Invalid note", ErrorCode.MDNERR_GM_INVALIDNOTE);
+            }
+
+            if (velocity > 0x7f)
+            {
+                throw new MIDIException("Invalid velocity", ErrorCode.MDNERR_GM_INVALIDVELOCITY);
+            }
+
+            uint msg = ((uint)0x80 | channel) | ((uint)note << 8) | ((uint)velocity << 16);
 
             SendShortMsg(msg);
         }

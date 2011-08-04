@@ -77,6 +77,14 @@ namespace MIDIDotNet
             {
                 throw new MIDIException("Cannot send a message to an unopened device", ErrorCode.MDNERR_DEVICENOTOPEN);
             }
+            if ((msg & 0x80) != 0x80)
+            {
+                throw new MIDIException("Invalid status byte in short message", ErrorCode.MDNERR_MSG_INVALIDSTATUS);
+            }
+            if ((msg & 0x00808000) != 0)
+            {
+                throw new MIDIException("Invalid data byte in short message", ErrorCode.MDNERR_MSG_INVALIDDATA);
+            }
             uint err = win32MIDI.midiOutShortMsg(hMidiOut, msg);
         }
 

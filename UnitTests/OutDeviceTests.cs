@@ -121,13 +121,36 @@ namespace UnitTests
             OutDevice dev = OutDevice.FromCaps(caps, win32Midi, 0);
             dev.Open();
 
-            uint shortMsg = (uint)0x00800000;
+            uint shortMsg = (uint)0x00000080;
 
             dev.SendShortMsg(shortMsg);
 
             Assert.AreEqual(win32Midi.callsTo("midiOutShortMsg"), 1);
             Assert.AreEqual(win32Midi.LastSentShortMsg, shortMsg);
         }
+
+        [Test]
+        public void SendMessage_Invalid()
+        {
+            MockWin32MIDI win32Midi = new MockWin32MIDI();
+            win32Midi.NumOutDevs = 1;
+            OutDevice dev = OutDevice.FromCaps(caps, win32Midi, 0);
+            dev.Open();
+
+            uint shortMsg = (uint)0x00000000; // Status bytes have to have MSB set
+            MIDIException e = Assert.Throws<MIDIException>(delegate { dev.SendShortMsg(shortMsg); });
+            Assert.AreEqual(e.ErrorCode, ErrorCode.MDNERR_MSG_INVALIDSTATUS);
+        
+            shortMsg = (uint)0x00008080; // Data bytes must have MSB clear
+            e = Assert.Throws<MIDIException>(delegate { dev.SendShortMsg(shortMsg); });
+            Assert.AreEqual(e.ErrorCode, ErrorCode.MDNERR_MSG_INVALIDDATA);
+
+            shortMsg = (uint)0x00800080; // Data bytes must have MSB clear
+            e = Assert.Throws<MIDIException>(delegate { dev.SendShortMsg(shortMsg); });
+            Assert.AreEqual(e.ErrorCode, ErrorCode.MDNERR_MSG_INVALIDDATA);
+        }
+
+
         #endregion
     }
 }
