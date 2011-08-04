@@ -28,6 +28,8 @@ namespace SimpleLaunchpadDemo
                         for (int y = 0; y < 8; y++)
                             controller.Set(x, y, controller.Colour(r.Next(4), r.Next(4)));
 
+                controller.Reset();
+
             }
         }
     }

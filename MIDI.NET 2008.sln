@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Launchpad", "Launchpad\Laun
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleLaunchpadDemo", "SimpleLaunchpadDemo\SimpleLaunchpadDemo.csproj", "{5E88BAAF-F1B8-4B09-AE9F-3BF2964D08BC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConwayLifeLaunchpad", "ConwayLifeLaunchpad\ConwayLifeLaunchpad.csproj", "{08AFC4C5-62F0-47F7-A2AF-9F27ACABECDB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,6 +75,16 @@ Global
 		{5E88BAAF-F1B8-4B09-AE9F-3BF2964D08BC}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{5E88BAAF-F1B8-4B09-AE9F-3BF2964D08BC}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{5E88BAAF-F1B8-4B09-AE9F-3BF2964D08BC}.Release|x86.ActiveCfg = Release|Any CPU
+		{08AFC4C5-62F0-47F7-A2AF-9F27ACABECDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08AFC4C5-62F0-47F7-A2AF-9F27ACABECDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08AFC4C5-62F0-47F7-A2AF-9F27ACABECDB}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{08AFC4C5-62F0-47F7-A2AF-9F27ACABECDB}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{08AFC4C5-62F0-47F7-A2AF-9F27ACABECDB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{08AFC4C5-62F0-47F7-A2AF-9F27ACABECDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08AFC4C5-62F0-47F7-A2AF-9F27ACABECDB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08AFC4C5-62F0-47F7-A2AF-9F27ACABECDB}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{08AFC4C5-62F0-47F7-A2AF-9F27ACABECDB}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{08AFC4C5-62F0-47F7-A2AF-9F27ACABECDB}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -80,5 +92,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{93ED490F-1101-4C16-AE1A-0D4B1FC98031} = {8756F735-7CC1-4B32-AFED-6BE6DA261CB5}
 		{5E88BAAF-F1B8-4B09-AE9F-3BF2964D08BC} = {8756F735-7CC1-4B32-AFED-6BE6DA261CB5}
+		{08AFC4C5-62F0-47F7-A2AF-9F27ACABECDB} = {8756F735-7CC1-4B32-AFED-6BE6DA261CB5}
 	EndGlobalSection
 EndGlobal
