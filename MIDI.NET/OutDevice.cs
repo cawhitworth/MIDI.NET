@@ -85,6 +85,10 @@ namespace MIDIDotNet
 
         public void Open()
         {
+            if (hMidiOut != (IntPtr)0)
+            {
+                throw new MIDIException("Cannot open a device that is already open", ErrorCode.MDNERR_DEVICEOPEN);
+            }
             uint err = win32MIDI.midiOutOpen(ref hMidiOut, deviceID, midiOutProc, (IntPtr)0, InvokeLayer.MidiOpenFlags.CALLBACK_FUNCTION);
             if (err != InvokeLayer.ErrorCode.MMSYSERR_NOERROR)
             {
@@ -97,7 +101,7 @@ namespace MIDIDotNet
         {
             if (hMidiOut == (IntPtr)0)
             {
-                throw new MIDIException("Cannot close a device that we did not open", ErrorCode.MDNERR_INVALIDDEVICE);
+                throw new MIDIException("Cannot close a device that we did not open", ErrorCode.MDNERR_DEVICENOTOPEN);
             }
             uint err = win32MIDI.midiOutClose(hMidiOut);
             if (err != InvokeLayer.ErrorCode.MMSYSERR_NOERROR)
@@ -111,7 +115,7 @@ namespace MIDIDotNet
         {
             if (hMidiOut == (IntPtr)0)
             {
-                throw new MIDIException("Cannot send a message to an unopened device", ErrorCode.MDNERR_INVALIDDEVICE);
+                throw new MIDIException("Cannot send a message to an unopened device", ErrorCode.MDNERR_DEVICENOTOPEN);
             }
             if ((msg & 0x80) != 0x80)
             {

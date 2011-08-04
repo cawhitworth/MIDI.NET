@@ -112,7 +112,7 @@ namespace UnitTests
             
             MIDIException e = Assert.Throws<MIDIException>(delegate { dev.Close(); });
 
-            Assert.AreEqual(e.ErrorCode, ErrorCode.MDNERR_INVALIDDEVICE);
+            Assert.AreEqual(e.ErrorCode, ErrorCode.MDNERR_DEVICENOTOPEN);
             Assert.AreEqual(dev.IsOpen, false);
         }
         #endregion
@@ -146,7 +146,7 @@ namespace UnitTests
 
             MIDIException e = Assert.Throws<MIDIException>(delegate { dev.Start(); });
 
-            Assert.AreEqual(e.ErrorCode, ErrorCode.MDNERR_INVALIDDEVICE);
+            Assert.AreEqual(e.ErrorCode, ErrorCode.MDNERR_DEVICENOTOPEN);
         }
 
         [Test]
@@ -161,7 +161,58 @@ namespace UnitTests
 
             MIDIException e = Assert.Throws<MIDIException>(delegate { dev.Start(); });
 
-            Assert.AreEqual(e.ErrorCode, ErrorCode.MDNERR_INVALIDDEVICE);
+            Assert.AreEqual(e.ErrorCode, ErrorCode.MDNERR_DEVICENOTOPEN);
+        }
+
+        [Test]
+        public void StartADeviceThatIsAlreadyStarted()
+        {
+            MockWin32MIDI win32MIDI = new MockWin32MIDI();
+            win32MIDI.NumInDevs = 1;
+            InDevice dev = InDevice.FromCaps(caps, win32MIDI, 0);
+            dev.Open();
+            dev.Start();
+
+            MIDIException e = Assert.Throws<MIDIException>(delegate { dev.Start(); });
+
+            Assert.AreEqual(e.ErrorCode, ErrorCode.MDNERR_DEVICESTARTED);
+            Assert.AreEqual(win32MIDI.callsTo("midiInStart"), 1);
+
+            Assert.AreEqual(dev.IsStarted, true);
+
+        }
+        #endregion
+
+        #region Stop tests
+        [Test]
+        public void StopAnOpenAndStartedDevice()
+        {
+            MockWin32MIDI win32MIDI = new MockWin32MIDI();
+            win32MIDI.NumInDevs = 1;
+            InDevice dev = InDevice.FromCaps(caps, win32MIDI, 0);
+            dev.Open();
+            dev.Start();
+
+            Assert.DoesNotThrow(delegate { dev.Stop(); });
+
+            Assert.AreEqual(win32MIDI.callsTo("midiInStop"), 1);
+
+            Assert.AreEqual(dev.IsStarted, false);
+        }
+
+        [Test]
+        public void StopAnOpenAndUnstartedDevice()
+        {
+            MockWin32MIDI win32MIDI = new MockWin32MIDI();
+            win32MIDI.NumInDevs = 1;
+            InDevice dev = InDevice.FromCaps(caps, win32MIDI, 0);
+            dev.Open();
+
+            MIDIException e = Assert.Throws<MIDIException>(delegate { dev.Stop(); });
+
+            Assert.AreEqual(e.ErrorCode, ErrorCode.MDNERR_DEVICENOTSTARTED);
+
+            Assert.AreEqual(dev.IsStarted, false);
         }
 
         #endregion

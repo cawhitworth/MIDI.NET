@@ -47,6 +47,28 @@ namespace UnitTests
         [Test]
         public void OpenDeviceThatIsAlreadyOpen()
         {
+            // Set up a framework with one device
+            MockWin32MIDI win32Midi = new MockWin32MIDI();
+            win32Midi.NumOutDevs = 1;
+
+            // Construct an OutDevice with the appropriate device ID
+            OutDevice dev = OutDevice.FromCaps(caps, win32Midi, 0);
+
+            dev.Open();
+
+            win32Midi.clearCalls();
+
+            // And try and open it
+            MIDIException e = Assert.Throws<MIDIException>(delegate { dev.Open(); });
+
+            Assert.AreEqual(e.ErrorCode, ErrorCode.MDNERR_DEVICEOPEN);
+            Assert.AreEqual(win32Midi.callsTo("midiOutOpen"), 0);
+            Assert.AreEqual(dev.IsOpen, true);
+        }
+
+        [Test]
+        public void OpenDeviceThatIsAlreadyOpenBySomeoneElse()
+        {
             // Set up a framework with one device that is already open (perhaps by another application?)
             MockWin32MIDI win32Midi = new MockWin32MIDI();
             win32Midi.NumOutDevs = 1;
@@ -60,6 +82,7 @@ namespace UnitTests
 
             Assert.AreEqual(e.ErrorCode, InvokeLayer.ErrorCode.MMSYSERR_ALLOCATED);
             Assert.AreEqual(win32Midi.callsTo("midiOutOpen"), 1);
+            Assert.AreEqual(dev.IsOpen, false);
         }
 
         [Test]
@@ -78,6 +101,7 @@ namespace UnitTests
 
             Assert.AreEqual(e.ErrorCode, InvokeLayer.ErrorCode.MMSYSERR_BADDEVICEID);
             Assert.AreEqual(win32Midi.callsTo("midiOutOpen"), 1);
+            Assert.AreEqual(dev.IsOpen, false);
         }
 
         #endregion
@@ -95,7 +119,7 @@ namespace UnitTests
             MIDIException e = Assert.Throws<MIDIException>( delegate { dev.Close(); } );
 
             Assert.AreEqual(win32Midi.callsTo("midiOutClose"), 0);
-            Assert.AreEqual(e.ErrorCode, ErrorCode.MDNERR_INVALIDDEVICE);
+            Assert.AreEqual(e.ErrorCode, ErrorCode.MDNERR_DEVICENOTOPEN);
         }
 
         [Test]
@@ -159,9 +183,12 @@ namespace UnitTests
             win32Midi.NumOutDevs = 1;
             OutDevice dev = OutDevice.FromCaps(caps, win32Midi, 0);
 
-            uint shortMsg = (uint)0x00000080; // Status bytes have to have MSB set
+            // Don't open the device
+
+            uint shortMsg = (uint)0x00000080;
             MIDIException e = Assert.Throws<MIDIException>(delegate { dev.SendShortMsg(shortMsg); });
-            Assert.AreEqual(e.ErrorCode, ErrorCode.MDNERR_INVALIDDEVICE);
+
+            Assert.AreEqual(e.ErrorCode, ErrorCode.MDNERR_DEVICENOTOPEN);
         }
 
         #endregion

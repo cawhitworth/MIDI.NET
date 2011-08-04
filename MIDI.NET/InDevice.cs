@@ -71,6 +71,10 @@ namespace MIDIDotNet
 
         public void Open()
         {
+            if (hMidiIn != (IntPtr)0)
+            {
+                throw new MIDIException("Cannot open a device that we already opened", ErrorCode.MDNERR_DEVICEOPEN);
+            }
             uint err = win32MIDI.midiInOpen(ref hMidiIn, deviceID, midiInProc, (IntPtr)0, InvokeLayer.MidiOpenFlags.CALLBACK_FUNCTION);
             if (err != InvokeLayer.ErrorCode.MMSYSERR_NOERROR)
             {
@@ -83,7 +87,7 @@ namespace MIDIDotNet
         {
             if (hMidiIn == (IntPtr)0)
             {
-                throw new MIDIException("Cannot close a device that we did not open", ErrorCode.MDNERR_INVALIDDEVICE);
+                throw new MIDIException("Cannot close a device that we did not open", ErrorCode.MDNERR_DEVICENOTOPEN);
             }
             uint err = win32MIDI.midiInClose(hMidiIn);
 
@@ -99,7 +103,11 @@ namespace MIDIDotNet
         {
             if (hMidiIn == (IntPtr)0)
             {
-                throw new MIDIException("Cannot start a device we did not open", ErrorCode.MDNERR_INVALIDDEVICE);
+                throw new MIDIException("Cannot start a device we did not open", ErrorCode.MDNERR_DEVICENOTOPEN);
+            }
+            if (IsStarted)
+            {
+                throw new MIDIException("Cannot start a device that is already started", ErrorCode.MDNERR_DEVICESTARTED);
             }
             uint err = win32MIDI.midiInStart(hMidiIn);
 
@@ -113,7 +121,22 @@ namespace MIDIDotNet
 
         public void Stop()
         {
+            if (hMidiIn == (IntPtr)0)
+            {
+                throw new MIDIException("Cannot stop a device we did not open", ErrorCode.MDNERR_DEVICENOTOPEN);
+            }
+            if (!IsStarted)
+            {
+                throw new MIDIException("Cannot stop a device we did not start", ErrorCode.MDNERR_DEVICENOTSTARTED);
+            }
+            uint err = win32MIDI.midiInStop(hMidiIn);
 
+            if (err != InvokeLayer.ErrorCode.MMSYSERR_NOERROR)
+            {
+                throw new MIDIException("Error stopping in device", err);
+            }
+
+            isStarted = false;
         }
     }
 }
