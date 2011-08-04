@@ -17,6 +17,9 @@ namespace MIDIDotNet
         #region IOutDevice
         public string DeviceName { get { return outDevice.DeviceName; } }
         public bool IsOpen { get { return outDevice.IsOpen; } }
+        public uint Polyphony { get { return outDevice.Polyphony; } }
+        public uint Voices { get { return outDevice.Voices; } }
+        public bool[] Channel { get { return outDevice.Channel; } }
         public void Open() { outDevice.Open(); }
         public void Close() { outDevice.Close(); }
         public void SendShortMsg(uint msg) { outDevice.SendShortMsg(msg); }

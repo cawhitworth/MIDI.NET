@@ -9,6 +9,9 @@ namespace MIDIDotNet
     {
         string DeviceName { get; }
         bool IsOpen { get; }
+        uint Polyphony { get; }
+        uint Voices { get; }
+        bool[] Channel { get; }
         void Open();
         void Close();
         void SendShortMsg(uint msg);

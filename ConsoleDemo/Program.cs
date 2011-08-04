@@ -31,6 +31,15 @@ namespace ConsoleDemo
             }
 
             GMOutDevice gmOutDevice = new GMOutDevice(devManager.OutDevices[0]);
+
+            Console.WriteLine("{0} voices, {1} polyphony", gmOutDevice.Voices, gmOutDevice.Polyphony);
+            StringBuilder s = new StringBuilder("Channels: ");
+            for (int channel = 0; channel < 16; channel++)
+            {
+                s.Append(gmOutDevice.Channel[channel] ? "X" : "-");
+            }
+            Console.WriteLine(s.ToString());
+
             gmOutDevice.Open();
             for (int rep = 0; rep < 10; rep++)
             {

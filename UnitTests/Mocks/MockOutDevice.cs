@@ -10,6 +10,15 @@ namespace UnitTests
     {
         bool open = false;
         uint lastShortMsg;
+        bool[] channels = new bool[16];
+
+        public MockOutDevice()
+        {
+            for (int i = 0; i < 16; i++)
+            {
+                channels[i] = true;
+            }
+        }
 
         public uint LastShortMsg
         {
@@ -37,6 +46,21 @@ namespace UnitTests
             }
         }
 
+        public uint Voices
+        {
+            get { return 128; }
+        }
+
+        public uint Polyphony
+        {
+            get { return 16; }
+        }
+
+        public bool[] Channel
+        {
+            get { return channels; }
+        }
+        
         public void Open()
         {
             noteCall("Open");

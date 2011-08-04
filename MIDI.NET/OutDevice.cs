@@ -13,6 +13,9 @@ namespace MIDIDotNet
         private InvokeLayer.MidiOutProc midiOutProc;
         private IntPtr hMidiOut = (IntPtr)0;
         private bool open = false;
+        private uint polyphony;
+        private uint voices;
+        private bool[] channels = new bool[16];
 
         #region Constructors
         private OutDevice(IWin32MIDI win32MIDI, uint deviceID)
@@ -27,6 +30,12 @@ namespace MIDIDotNet
             OutDevice device = new OutDevice(win32MIDI, deviceID);
 
             device.deviceName = caps.szPName;
+            device.polyphony = caps.wNotes;
+            device.voices = caps.wVoices;
+            for (int channel = 0; channel < 16; channel++)
+            {
+                device.channels[channel] = (caps.wChannelMask & (1 << channel)) != 0;
+            }
 
             return device;
         }
@@ -48,6 +57,22 @@ namespace MIDIDotNet
             get { return open; }
         }
         #endregion
+
+        public uint Polyphony
+        {
+            get { return polyphony; }
+        }
+
+        public uint Voices
+        {
+
+            get { return voices; }
+        }
+
+        public bool[] Channel
+        {
+            get { return channels; }
+        }
 
         #region Public methods
 
