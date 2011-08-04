@@ -215,6 +215,38 @@ namespace UnitTests
             Assert.AreEqual(dev.IsStarted, false);
         }
 
+        [Test]
+        public void StopAnUnopenedDevice()
+        {
+            MockWin32MIDI win32MIDI = new MockWin32MIDI();
+            win32MIDI.NumInDevs = 1;
+            InDevice dev = InDevice.FromCaps(caps, win32MIDI, 0);
+
+            MIDIException e = Assert.Throws<MIDIException>(delegate { dev.Stop(); });
+
+            Assert.AreEqual(e.ErrorCode, ErrorCode.MDNERR_DEVICENOTOPEN);
+            Assert.AreEqual(dev.IsStarted, false);
+        }
+
+
         #endregion
+
+        #region Event tests
+        
+
+        [Test]
+        public void HandleData_Simple()
+        {
+            MockWin32MIDI win32MIDI = new MockWin32MIDI();
+            win32MIDI.NumInDevs = 1;
+            InDevice dev = InDevice.FromCaps(caps, win32MIDI, 0);
+            dev.Open();
+            dev.Start();
+
+
+        }
+
+        #endregion
+
     }
 }
