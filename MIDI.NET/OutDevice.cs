@@ -100,6 +100,10 @@ namespace MIDIDotNet
                 throw new MIDIException("Cannot close a device that we did not open", ErrorCode.MDNERR_INVALIDDEVICE);
             }
             uint err = win32MIDI.midiOutClose(hMidiOut);
+            if (err != InvokeLayer.ErrorCode.MMSYSERR_NOERROR)
+            {
+                throw new MIDIException("Error closing out device", err);
+            }
             isOpen = false;
         }
 

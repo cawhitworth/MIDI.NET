@@ -11,7 +11,7 @@ namespace MIDIDotNet
         string deviceName;
         uint deviceID;
         bool isOpen = false;
-        IntPtr hMidiIn;
+        IntPtr hMidiIn = (IntPtr)0;
         InvokeLayer.MidiInProc midiInProc;
         HandleData handleDataDelegate = null;
 
@@ -75,6 +75,17 @@ namespace MIDIDotNet
 
         public void Close()
         {
+            if (hMidiIn == (IntPtr)0)
+            {
+                throw new MIDIException("Cannot close a device that we did not open", ErrorCode.MDNERR_INVALIDDEVICE);
+            }
+            uint err = win32MIDI.midiInClose(hMidiIn);
+
+            if (err != InvokeLayer.ErrorCode.MMSYSERR_NOERROR)
+            {
+                throw new MIDIException("Error closing in device", err);
+            }
+            isOpen = false;
 
         }
     }

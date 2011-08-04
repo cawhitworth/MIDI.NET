@@ -37,7 +37,7 @@ namespace UnitTests
             InDevice dev = InDevice.FromCaps(caps, win32Midi, 0);
 
             // And open it
-            dev.Open();
+            Assert.DoesNotThrow(delegate { dev.Open(); });
 
             Assert.AreEqual(win32Midi.callsTo("midiInOpen"), 1);
             Assert.AreEqual(dev.IsOpen, true);
@@ -78,8 +78,39 @@ namespace UnitTests
             Assert.AreEqual(e.ErrorCode, InvokeLayer.ErrorCode.MMSYSERR_ALLOCATED);
             Assert.AreEqual(win32Midi.callsTo("midiInOpen"), 1);
             Assert.AreEqual(dev.IsOpen, false);
-
         }
         #endregion
+
+        [Test]
+        public void CloseDeviceWeOpened()
+        {
+
+            // Set up a framework with one device
+            MockWin32MIDI win32Midi = new MockWin32MIDI();
+            win32Midi.NumInDevs = 1;
+
+            InDevice dev = InDevice.FromCaps(caps, win32Midi, 0);
+            dev.Open();
+
+            Assert.DoesNotThrow(delegate { dev.Close(); });
+
+            Assert.AreEqual(win32Midi.callsTo("midiInClose"), 1);
+            Assert.AreEqual(dev.IsOpen, false);
+        }
+
+        [Test]
+        public void CloseDeviceWeDidNotOpen()
+        {
+            // Set up a framework with one device
+            MockWin32MIDI win32Midi = new MockWin32MIDI();
+            win32Midi.NumInDevs = 1;
+
+            InDevice dev = InDevice.FromCaps(caps, win32Midi, 0);
+            
+            MIDIException e = Assert.Throws<MIDIException>(delegate { dev.Close(); });
+
+            Assert.AreEqual(e.ErrorCode, ErrorCode.MDNERR_INVALIDDEVICE);
+            Assert.AreEqual(dev.IsOpen, false);
+        }
     }
 }
