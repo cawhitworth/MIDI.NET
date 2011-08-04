@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MIDIDotNet
 {
-    public class GMOutDevice : IOutDevice
+    public class GMOutDevice : IOutDevice, IDisposable
     {
         IOutDevice outDevice;
 
@@ -13,6 +13,13 @@ namespace MIDIDotNet
         {
             this.outDevice = outDevice;
         }
+
+        #region IDisposable
+        public void Dispose()
+        {
+
+        }
+        #endregion
 
         #region IOutDevice
         public string DeviceName { get { return outDevice.DeviceName; } }

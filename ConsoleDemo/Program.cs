@@ -25,21 +25,25 @@ namespace ConsoleDemo
 
             Console.WriteLine("Out Devices:");
 
-            foreach (OutDevice dev in devManager.OutDevices)
+            foreach (OutDevice outDevice in devManager.OutDevices)
             {
-                Console.WriteLine(" - {0}", dev.DeviceName);
+                using (GMOutDevice gmOutDevice = new GMOutDevice(outDevice))
+                {
+                    Console.WriteLine("Device: {0}", gmOutDevice.DeviceName);
+                    Console.WriteLine("{0} voices, {1} polyphony", gmOutDevice.Voices, gmOutDevice.Polyphony);
+                    StringBuilder s = new StringBuilder("Channels: ");
+                    for (int channel = 0; channel < 16; channel++)
+                    {
+                        s.Append(gmOutDevice.Channel[channel] ? "X" : "-");
+                    }
+                    Console.WriteLine(s.ToString());
+
+                }
+                Console.WriteLine();
+
             }
 
-            GMOutDevice gmOutDevice = new GMOutDevice(devManager.OutDevices[0]);
-
-            Console.WriteLine("{0} voices, {1} polyphony", gmOutDevice.Voices, gmOutDevice.Polyphony);
-            StringBuilder s = new StringBuilder("Channels: ");
-            for (int channel = 0; channel < 16; channel++)
-            {
-                s.Append(gmOutDevice.Channel[channel] ? "X" : "-");
-            }
-            Console.WriteLine(s.ToString());
-
+            /*
             gmOutDevice.Open();
             for (int rep = 0; rep < 10; rep++)
             {
@@ -48,7 +52,7 @@ namespace ConsoleDemo
                 gmOutDevice.SendNoteOff(0, 50, 0);
                 Thread.Sleep(500);
             }
-            gmOutDevice.Close();
+            gmOutDevice.Close();*/
         }
     }
 }
