@@ -111,7 +111,7 @@ namespace MIDIDotNet
         {
             if (hMidiOut == (IntPtr)0)
             {
-                throw new MIDIException("Cannot send a message to an unopened device", ErrorCode.MDNERR_DEVICENOTOPEN);
+                throw new MIDIException("Cannot send a message to an unopened device", ErrorCode.MDNERR_INVALIDDEVICE);
             }
             if ((msg & 0x80) != 0x80)
             {

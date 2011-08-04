@@ -11,8 +11,13 @@ namespace MIDIDotNet
     {
         string DeviceName { get; }
         bool IsOpen { get; }
+        bool IsStarted { get; }
         HandleData HandleDataDelegate { set; }
+
         void Open();
         void Close();
+
+        void Start();
+        void Stop();
     }
 }

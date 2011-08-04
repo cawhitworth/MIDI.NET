@@ -152,6 +152,17 @@ namespace UnitTests
             Assert.AreEqual(e.ErrorCode, ErrorCode.MDNERR_MSG_INVALIDDATA);
         }
 
+        [Test]
+        public void SendMessage_Errors()
+        {
+            MockWin32MIDI win32Midi = new MockWin32MIDI();
+            win32Midi.NumOutDevs = 1;
+            OutDevice dev = OutDevice.FromCaps(caps, win32Midi, 0);
+
+            uint shortMsg = (uint)0x00000080; // Status bytes have to have MSB set
+            MIDIException e = Assert.Throws<MIDIException>(delegate { dev.SendShortMsg(shortMsg); });
+            Assert.AreEqual(e.ErrorCode, ErrorCode.MDNERR_INVALIDDEVICE);
+        }
 
         #endregion
     }

@@ -36,6 +36,8 @@ namespace UnitTests
             // Construct it manually
             InDevice dev = InDevice.FromCaps(caps, win32Midi, 0);
 
+            Assert.AreEqual(dev.IsOpen, false);
+
             // And open it
             Assert.DoesNotThrow(delegate { dev.Open(); });
 
@@ -81,6 +83,7 @@ namespace UnitTests
         }
         #endregion
 
+        #region Close device tests
         [Test]
         public void CloseDeviceWeOpened()
         {
@@ -112,5 +115,55 @@ namespace UnitTests
             Assert.AreEqual(e.ErrorCode, ErrorCode.MDNERR_INVALIDDEVICE);
             Assert.AreEqual(dev.IsOpen, false);
         }
+        #endregion
+
+        #region Start tests
+        [Test]
+        public void StartAnOpenDevice()
+        {
+            MockWin32MIDI win32MIDI = new MockWin32MIDI();
+            win32MIDI.NumInDevs = 1;
+            InDevice dev = InDevice.FromCaps(caps, win32MIDI, 0);
+            dev.Open();
+
+            Assert.AreEqual(dev.IsStarted, false);
+
+            Assert.DoesNotThrow(delegate { dev.Start(); });
+
+            Assert.AreEqual(win32MIDI.callsTo("midiInStart"), 1);
+
+            Assert.AreEqual(dev.IsStarted, true);
+        }
+
+        [Test]
+        public void StartAnUnopenedDevice()
+        {
+            MockWin32MIDI win32MIDI = new MockWin32MIDI();
+            win32MIDI.NumInDevs = 1;
+            InDevice dev = InDevice.FromCaps(caps, win32MIDI, 0);
+
+            Assert.AreEqual(dev.IsStarted, false);
+
+            MIDIException e = Assert.Throws<MIDIException>(delegate { dev.Start(); });
+
+            Assert.AreEqual(e.ErrorCode, ErrorCode.MDNERR_INVALIDDEVICE);
+        }
+
+        [Test]
+        public void StartADeviceNotOpenedByUs()
+        {
+            MockWin32MIDI win32MIDI = new MockWin32MIDI();
+            win32MIDI.NumInDevs = 1;
+            win32MIDI.InDeviceOpen[0] = true;
+            InDevice dev = InDevice.FromCaps(caps, win32MIDI, 0);
+
+            Assert.AreEqual(dev.IsStarted, false);
+
+            MIDIException e = Assert.Throws<MIDIException>(delegate { dev.Start(); });
+
+            Assert.AreEqual(e.ErrorCode, ErrorCode.MDNERR_INVALIDDEVICE);
+        }
+
+        #endregion
     }
 }

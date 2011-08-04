@@ -36,7 +36,7 @@ namespace MIDIDotNet
     {
         // General errors
         public static uint MDNERR_INVALIDDEVICE  = 0xf0000001;
-        public static uint MDNERR_DEVICENOTOPEN  = 0xf0000002;
+
         // Send message
         public static uint MDNERR_MSG_INVALIDSTATUS  = 0xf0000101;
         public static uint MDNERR_MSG_INVALIDDATA    = 0xf0000102;

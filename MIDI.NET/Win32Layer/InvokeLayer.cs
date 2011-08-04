@@ -29,6 +29,7 @@ namespace MIDIDotNet
             public const uint MMSYSERR_NOERROR     = 0x00000000;
             public const uint MMSYSERR_BADDEVICEID = 0x00000002;
             public const uint MMSYSERR_ALLOCATED   = 0x00000004;
+            public const uint MMSYSERR_INVALHANDLE = 0x00000005;
         }
 
         public static class MidiOutputDeviceType

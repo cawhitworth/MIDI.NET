@@ -11,6 +11,7 @@ namespace MIDIDotNet
         string deviceName;
         uint deviceID;
         bool isOpen = false;
+        bool isStarted = false;
         IntPtr hMidiIn = (IntPtr)0;
         InvokeLayer.MidiInProc midiInProc;
         HandleData handleDataDelegate = null;
@@ -55,6 +56,11 @@ namespace MIDIDotNet
             get { return isOpen; }
         }
 
+        public bool IsStarted
+        {
+            get { return isStarted; }
+        }
+
         public HandleData HandleDataDelegate
         {
             set
@@ -86,6 +92,27 @@ namespace MIDIDotNet
                 throw new MIDIException("Error closing in device", err);
             }
             isOpen = false;
+
+        }
+
+        public void Start()
+        {
+            if (hMidiIn == (IntPtr)0)
+            {
+                throw new MIDIException("Cannot start a device we did not open", ErrorCode.MDNERR_INVALIDDEVICE);
+            }
+            uint err = win32MIDI.midiInStart(hMidiIn);
+
+            if (err != InvokeLayer.ErrorCode.MMSYSERR_NOERROR)
+            {
+                throw new MIDIException("Error starting in device", err);
+            }
+
+            isStarted = true;
+        }
+
+        public void Stop()
+        {
 
         }
     }

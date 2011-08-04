@@ -156,18 +156,30 @@ namespace UnitTests
         public uint midiInClose(IntPtr hMidiIn)
         {
             noteCall("midiInClose");
+            if (!inDeviceOpen[(int)hMidiIn - 1])
+            {
+                return InvokeLayer.ErrorCode.MMSYSERR_INVALHANDLE;
+            }
             return InvokeLayer.ErrorCode.MMSYSERR_NOERROR;
         }
 
         public uint midiInStart(IntPtr hMidiIn)
         {
             noteCall("midiInStart");
+            if (!inDeviceOpen[(int)hMidiIn - 1])
+            {
+                return InvokeLayer.ErrorCode.MMSYSERR_INVALHANDLE;
+            }
             return InvokeLayer.ErrorCode.MMSYSERR_NOERROR;
         }
 
         public uint midiInStop(IntPtr hMidiIn)
         {
             noteCall("midiInStop");
+            if (!inDeviceOpen[(int)hMidiIn - 1])
+            {
+                return InvokeLayer.ErrorCode.MMSYSERR_INVALHANDLE;
+            }
             return InvokeLayer.ErrorCode.MMSYSERR_NOERROR;
         }
     }
