@@ -12,7 +12,7 @@ namespace MIDIDotNet
         private uint deviceID;
         private InvokeLayer.MidiOutProc midiOutProc;
         private IntPtr hMidiOut = (IntPtr)0;
-        private bool open = false;
+        private bool isOpen = false;
         private uint polyphony;
         private uint voices;
         private uint deviceType;
@@ -56,7 +56,7 @@ namespace MIDIDotNet
 
         public bool IsOpen
         {
-            get { return open; }
+            get { return isOpen; }
         }
         #endregion
 
@@ -88,9 +88,9 @@ namespace MIDIDotNet
             uint err = win32MIDI.midiOutOpen(ref hMidiOut, deviceID, midiOutProc, (IntPtr)0, InvokeLayer.MidiOpenFlags.CALLBACK_FUNCTION);
             if (err != InvokeLayer.ErrorCode.MMSYSERR_NOERROR)
             {
-                throw new MIDIException("Error on out device open", err);
+                throw new MIDIException("Error opening out device", err);
             }
-            open = true;
+            isOpen = true;
         }
 
         public void Close()
@@ -99,8 +99,8 @@ namespace MIDIDotNet
             {
                 throw new MIDIException("Cannot close a device that we did not open", ErrorCode.MDNERR_INVALIDDEVICE);
             }
-
             uint err = win32MIDI.midiOutClose(hMidiOut);
+            isOpen = false;
         }
 
         public void SendShortMsg(uint msg)

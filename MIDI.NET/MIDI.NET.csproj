@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="DeviceManager.cs" />
     <Compile Include="GMOutDevice.cs" />
+    <Compile Include="IInDevice.cs" />
     <Compile Include="InDevice.cs" />
     <Compile Include="IOutDevice.cs" />
     <Compile Include="MIDIException.cs" />

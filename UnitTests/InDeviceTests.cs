@@ -21,8 +21,65 @@ namespace UnitTests
         [Test]
         public void Name()
         {
-            InDevice dev = InDevice.FromCaps(caps);
+            InDevice dev = InDevice.FromCaps(caps, null, 0);
             Assert.AreEqual(dev.DeviceName, deviceName);
         }
+    
+        #region Open Device Tests
+        [Test]
+        public void OpenOneDevice()
+        {
+            // Set up a framework with one device
+            MockWin32MIDI win32Midi = new MockWin32MIDI();
+            win32Midi.NumInDevs = 1;
+
+            // Construct it manually
+            InDevice dev = InDevice.FromCaps(caps, win32Midi, 0);
+
+            // And open it
+            dev.Open();
+
+            Assert.AreEqual(win32Midi.callsTo("midiInOpen"), 1);
+            Assert.AreEqual(dev.IsOpen, true);
+        }
+
+        [Test]
+        public void OpenNonExistentDevice()
+        {
+            // Set up a framework with one device
+            MockWin32MIDI win32Midi = new MockWin32MIDI();
+            win32Midi.NumInDevs = 0;
+
+            // Construct it manually
+            InDevice dev = InDevice.FromCaps(caps, win32Midi, 0);
+
+            // And open it
+            MIDIException e = Assert.Throws<MIDIException>(delegate { dev.Open(); });
+
+            Assert.AreEqual(e.ErrorCode, InvokeLayer.ErrorCode.MMSYSERR_BADDEVICEID);
+            Assert.AreEqual(win32Midi.callsTo("midiInOpen"), 1);
+            Assert.AreEqual(dev.IsOpen, false);
+        }
+
+        [Test]
+        public void OpenAlreadyOpenDevice()
+        {
+            // Set up a framework with one device
+            MockWin32MIDI win32Midi = new MockWin32MIDI();
+            win32Midi.NumInDevs = 1;
+            win32Midi.InDeviceOpen[0] = true;
+
+            // Construct it manually
+            InDevice dev = InDevice.FromCaps(caps, win32Midi, 0);
+
+            // And open it
+            MIDIException e = Assert.Throws<MIDIException>(delegate { dev.Open(); });
+
+            Assert.AreEqual(e.ErrorCode, InvokeLayer.ErrorCode.MMSYSERR_ALLOCATED);
+            Assert.AreEqual(win32Midi.callsTo("midiInOpen"), 1);
+            Assert.AreEqual(dev.IsOpen, false);
+
+        }
+        #endregion
     }
 }

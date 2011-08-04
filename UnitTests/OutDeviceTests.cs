@@ -109,6 +109,8 @@ namespace UnitTests
             Assert.DoesNotThrow(delegate { dev.Close(); });
 
             Assert.AreEqual(win32Midi.callsTo("midiOutClose"), 1);
+
+            Assert.AreEqual(dev.IsOpen, false);
         }
         #endregion
 

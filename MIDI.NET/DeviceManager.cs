@@ -38,11 +38,11 @@ namespace MIDIDotNet
         {
             inDevices.Clear();
             uint numDevs = win32MIDI.midiInGetNumDevs();
-            for (int dev = 0; dev < numDevs; dev++)
+            for (uint dev = 0; dev < numDevs; dev++)
             {
                 InvokeLayer.MIDIINCAPS midiInCaps;
                 win32MIDI.midiInGetDevCaps((IntPtr)dev, out midiInCaps);
-                inDevices.Add(InDevice.FromCaps(midiInCaps));
+                inDevices.Add(InDevice.FromCaps(midiInCaps, win32MIDI, dev));
             }
         }
 

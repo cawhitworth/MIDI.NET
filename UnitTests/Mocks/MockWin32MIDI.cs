@@ -41,10 +41,7 @@ namespace UnitTests
 
         public List<bool> OutDeviceOpen
         {
-            get
-            {
-                return outDeviceOpen;
-            }
+            get { return outDeviceOpen; }
         }
 
         uint numInDevs;
@@ -60,6 +57,11 @@ namespace UnitTests
                 inDeviceOpen.Clear();
                 for (int i = 0; i < numInDevs; i++) inDeviceOpen.Add(false);
             }
+        }
+
+        public List<bool> InDeviceOpen
+        {
+            get { return inDeviceOpen; }
         }
 
         public MockWin32MIDI()
@@ -138,6 +140,16 @@ namespace UnitTests
         public uint midiInOpen(ref IntPtr lphMidiIn, uint uDeviceID, InvokeLayer.MidiInProc dwCallback, IntPtr dwCallbackInstance, uint dwFlags)
         {
             noteCall("midiInOpen");
+            if (uDeviceID >= numInDevs)
+            {
+                return InvokeLayer.ErrorCode.MMSYSERR_BADDEVICEID;
+            }
+            if (inDeviceOpen[(int)uDeviceID])
+            {
+                return InvokeLayer.ErrorCode.MMSYSERR_ALLOCATED;
+            }
+            inDeviceOpen[(int)uDeviceID] = true;
+            lphMidiIn = (IntPtr)(uDeviceID + 1);
             return InvokeLayer.ErrorCode.MMSYSERR_NOERROR;
         }
 

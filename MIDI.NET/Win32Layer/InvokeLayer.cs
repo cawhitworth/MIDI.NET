@@ -17,31 +17,41 @@ namespace MIDIDotNet
 
         public static class MidiOpenFlags
         {
-            public static uint CALLBACK_NULL = 0x00000000;
-            public static uint CALLBACK_WINDOW = 0x00010000;
-            public static uint CALLBACK_THREAD = 0x00020000;
-            public static uint CALLBACK_FUNCTION = 0x00030000;
-            public static uint CALLBACK_EVENT = 0x00050000;
+            public const uint CALLBACK_NULL = 0x00000000;
+            public const uint CALLBACK_WINDOW = 0x00010000;
+            public const uint CALLBACK_THREAD = 0x00020000;
+            public const uint CALLBACK_FUNCTION = 0x00030000;
+            public const uint CALLBACK_EVENT = 0x00050000;
         }
 
         public static class ErrorCode
         {
-            public static uint MMSYSERR_NOERROR     = 0x00000000;
-            public static uint MMSYSERR_BADDEVICEID = 0x00000002;
-            public static uint MMSYSERR_ALLOCATED   = 0x00000004;
+            public const uint MMSYSERR_NOERROR     = 0x00000000;
+            public const uint MMSYSERR_BADDEVICEID = 0x00000002;
+            public const uint MMSYSERR_ALLOCATED   = 0x00000004;
         }
 
         public static class MidiOutputDeviceType
         {
-            public static uint MOD_MIDIPORT = 1;
-            public static uint MOD_SYNTH = 2;
-            public static uint MOD_SQSYNTH = 3;
-            public static uint MOD_FMSYNTH = 4;
-            public static uint MOD_MAPPER = 5;
-            public static uint MOD_WAVETABLE = 6;
-            public static uint MOD_SWSYNTH = 7;
+            public const uint MOD_MIDIPORT = 1;
+            public const uint MOD_SYNTH = 2;
+            public const uint MOD_SQSYNTH = 3;
+            public const uint MOD_FMSYNTH = 4;
+            public const uint MOD_MAPPER = 5;
+            public const uint MOD_WAVETABLE = 6;
+            public const uint MOD_SWSYNTH = 7;
 
             public static string[] Description = { "", "Port", "Synth", "Square-wave synth", "FM synth", "MIDI Mapper", "Wavetable synth", "Software synth" };
+        }
+
+        public static class MidiInMessages
+        {
+            public const uint MM_MIM_OPEN = 0x3C1;
+            public const uint MM_MIM_CLOSE = 0x3C2;
+            public const uint MM_MIM_DATA = 0x3C3;
+            public const uint MM_MIM_LONGDATA = 0x3C4;
+            public const uint MM_MIM_ERROR = 0x3C5;
+            public const uint MM_MIM_LONGERROR = 0x3C6;
         }
 
         [DllImport("winmm.dll")]
