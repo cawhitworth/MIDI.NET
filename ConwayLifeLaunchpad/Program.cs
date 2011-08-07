@@ -35,12 +35,15 @@ namespace ConwayLifeLaunchpad
                     {
                         for (int y = 0; y < 8; y++)
                         {
-                            c.Set(x, y, life[x, y] ? c.Colour(3, 3) : c.Colour(0, 0));
+                            if (life[x, y] != life.LastGeneration[x, y])
+                            {
+                                c.Set(x, y, life[x, y] ? c.Colour(3, 3) : c.Colour(0, 0));
+                            }
                         }
                     }
 
                     life.Tick();
-                    Thread.Sleep(500);
+                    Thread.Sleep(100);
                 }
                 c.Reset();
 

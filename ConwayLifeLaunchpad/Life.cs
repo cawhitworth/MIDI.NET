@@ -8,10 +8,12 @@ namespace ConwayLifeLaunchpad
     class Life
     {
         bool[,] currentGeneration;
+        bool[,] lastGeneration;
 
         public Life(int width, int height)
         {
             currentGeneration = new bool[width, height];
+            lastGeneration = new bool[Width, Height];
         }
 
         public int Width
@@ -30,9 +32,13 @@ namespace ConwayLifeLaunchpad
             set { currentGeneration[x, y] = value; }
         }
 
+        public bool[,] LastGeneration
+        {
+            get { return lastGeneration; }
+        }
+
         public void Tick()
         {
-            bool[,] lastGeneration = new bool[Width, Height];
             for (int x = 0; x < Width; x++)
                 for (int y = 0; y < Height; y++)
                     lastGeneration[x, y] = currentGeneration[x, y];
