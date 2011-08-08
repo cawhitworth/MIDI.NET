@@ -5,7 +5,7 @@ using System.Text;
 
 namespace LaunchpadMonitor
 {
-    interface ILaunchpad
+    interface ILaunchpad : IDisposable
     {
         void Clear();
 
@@ -13,5 +13,11 @@ namespace LaunchpadMonitor
         Launchpad.Color Get(int x, int y);
 
         void Present();
+
+        Launchpad.ButtonPressDelegate UpButtonPressDelegate { set; }
+        Launchpad.ButtonPressDelegate DownButtonPressDelegate { set; }
+        Launchpad.ButtonPressDelegate LeftButtonPressDelegate { set; }
+        Launchpad.ButtonPressDelegate RightButtonPressDelegate { set; }
+        Launchpad.GridButtonPressDelegate GridButtonPressDelegate { set; }
     }
 }

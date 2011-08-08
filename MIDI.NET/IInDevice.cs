@@ -5,14 +5,14 @@ using System.Text;
 
 namespace MIDIDotNet
 {
-    public delegate void HandleData(IntPtr dwParam1, IntPtr dwParam2);
+    public delegate void HandleDataDelegate(IntPtr dwParam1, IntPtr dwParam2);
 
-    interface IInDevice
+    public interface IInDevice
     {
         string DeviceName { get; }
         bool IsOpen { get; }
         bool IsStarted { get; }
-        HandleData HandleDataDelegate { set; }
+        HandleDataDelegate HandleDataDelegate { set; }
 
         void Open();
         void Close();

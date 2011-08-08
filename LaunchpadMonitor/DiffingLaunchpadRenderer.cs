@@ -5,9 +5,10 @@ using System.Text;
 
 namespace LaunchpadMonitor
 {
-    class SimpleLaunchpadRenderer : ILaunchpad, IDisposable
+    class DiffingLaunchpadRenderer : ILaunchpad, IDisposable
     {
         Launchpad.Color[,] grid = new Launchpad.Color[8, 8];
+        Launchpad.Color[,] oldGrid = new Launchpad.Color[8, 8];
 
         Launchpad.Controller controller = new Launchpad.Controller();
 
@@ -39,7 +40,9 @@ namespace LaunchpadMonitor
             {
                 for (int y = 0; y < 8; y++)
                 {
-                    controller.Set(x, y, grid[x, y]);
+                    if (oldGrid[x,y] != grid[x,y])
+                        controller.Set(x, y, grid[x, y]);
+                    oldGrid[x,y] = grid[x,y];
                 }
             }
         }

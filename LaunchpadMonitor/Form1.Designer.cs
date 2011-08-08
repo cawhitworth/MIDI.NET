@@ -32,6 +32,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.loadTextBox1 = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.scaleTextBox = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // processorComboBox
@@ -48,11 +50,11 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 13);
+            this.label1.Location = new System.Drawing.Point(19, 13);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(57, 13);
+            this.label1.Size = new System.Drawing.Size(51, 13);
             this.label1.TabIndex = 1;
-            this.label1.Text = "Processor:";
+            this.label1.Text = "Gatherer:";
             // 
             // label2
             // 
@@ -71,17 +73,37 @@
             this.loadTextBox1.Size = new System.Drawing.Size(38, 20);
             this.loadTextBox1.TabIndex = 3;
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(230, 72);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(37, 13);
+            this.label3.TabIndex = 4;
+            this.label3.Text = "Scale:";
+            // 
+            // scaleTextBox
+            // 
+            this.scaleTextBox.Location = new System.Drawing.Point(271, 69);
+            this.scaleTextBox.Name = "scaleTextBox";
+            this.scaleTextBox.ReadOnly = true;
+            this.scaleTextBox.Size = new System.Drawing.Size(36, 20);
+            this.scaleTextBox.TabIndex = 5;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(382, 112);
+            this.Controls.Add(this.scaleTextBox);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.loadTextBox1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.processorComboBox);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -93,6 +115,8 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox loadTextBox1;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox scaleTextBox;
 
     }
 }

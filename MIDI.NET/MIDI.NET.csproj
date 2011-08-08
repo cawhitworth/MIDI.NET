@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DeviceManager.cs" />
+    <Compile Include="GMInDevice.cs" />
     <Compile Include="GMOutDevice.cs" />
     <Compile Include="IInDevice.cs" />
     <Compile Include="InDevice.cs" />

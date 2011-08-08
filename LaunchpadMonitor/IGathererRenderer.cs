@@ -9,6 +9,8 @@ namespace LaunchpadMonitor
     {
         Gatherer Gatherer { set; }
         void Present();
-
+        void ZoomIn();
+        void ZoomOut();
+        int Scale { get; }
     }
 }

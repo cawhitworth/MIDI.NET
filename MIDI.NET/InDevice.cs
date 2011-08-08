@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MIDIDotNet
 {
-    public class InDevice
+    public class InDevice : IInDevice
     {
         IWin32MIDI win32MIDI;
         string deviceName;
@@ -14,7 +14,7 @@ namespace MIDIDotNet
         bool isStarted = false;
         IntPtr hMidiIn = (IntPtr)0;
         InvokeLayer.MidiInProc midiInProc;
-        HandleData handleDataDelegate = null;
+        HandleDataDelegate handleDataDelegate = null;
 
         private InDevice(IWin32MIDI win32MIDI, uint deviceID)
         {
@@ -61,7 +61,7 @@ namespace MIDIDotNet
             get { return isStarted; }
         }
 
-        public HandleData HandleDataDelegate
+        public HandleDataDelegate HandleDataDelegate
         {
             set
             {

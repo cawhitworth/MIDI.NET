@@ -50,5 +50,6 @@ namespace MIDIDotNet
         public static uint MDNERR_GM_INVALIDNOTE     = 0xf0010002;
         public static uint MDNERR_GM_INVALIDVELOCITY = 0xf0010003;
 
+        public static uint MDNERR_GM_INVALIDCALL = 0xf0020001;
     }
 }

@@ -12,8 +12,6 @@ namespace LaunchpadMonitor
 {
     public partial class Form1 : Form
     {
-        List<CPU> cpus = new List<CPU>();
-        List<Gatherer> gatherers = new List<Gatherer>();
 
         Timer updateTimer =new Timer();
 
@@ -23,33 +21,19 @@ namespace LaunchpadMonitor
         public Form1()
         {
             InitializeComponent();
-            CountCPUs();
-            UpdateCPUComboBox();
+            List<CPU> cpus = CPU.CountCPUs();
+            UpdateGathererComboBox(cpus);
             updateTimer.Tick += new EventHandler(timerEventHandler);
             updateTimer.Enabled = false;
 
-            launchpadRenderer = new SimpleLaunchpadRenderer();
+            launchpadRenderer = new DiffingLaunchpadRenderer();
             gathererRenderer = new LaunchpadGathererRenderer(launchpadRenderer);
+            launchpadRenderer.LeftButtonPressDelegate = delegate(bool release) { if (release) gathererRenderer.ZoomOut(); scaleTextBox.Text = gathererRenderer.Scale.ToString(); };
+            launchpadRenderer.RightButtonPressDelegate = delegate(bool release) { if (release) gathererRenderer.ZoomIn(); scaleTextBox.Text = gathererRenderer.Scale.ToString(); };
+
         }
 
-        private void CountCPUs()
-        {
-            SelectQuery selectQuery = new SelectQuery("Win32_Processor");
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher(selectQuery);
-            CPU cpu = null;
-            uint socket = 1;
-            foreach(ManagementObject processor in searcher.Get())
-            {
-                cpu = new CPU(socket,
-                    (uint)processor["NumberOfCores"],
-                    (uint)processor["NumberOfLogicalProcessors"]);
-                cpus.Add(cpu);
-
-                socket++;
-            }
-        }
-
-        private void UpdateCPUComboBox()
+        private void UpdateGathererComboBox(IEnumerable<CPU> cpus)
         {
             processorComboBox.Items.Clear();
             foreach (CPU cpu in cpus)
@@ -57,7 +41,6 @@ namespace LaunchpadMonitor
                 foreach (PerfCPU perfCPU in cpu.PerfCPUs)
                 {
                     Gatherer gatherer = new Gatherer(perfCPU.ManagementObjectSampler, 1000, perfCPU.ToString());
-                    gatherers.Add(gatherer);
                     processorComboBox.Items.Add(gatherer);
                 }
             }
@@ -85,6 +68,21 @@ namespace LaunchpadMonitor
             updateTimer.Interval = 250;
             updateTimer.Enabled = true;
             gathererRenderer.Gatherer = processorComboBox.SelectedItem as Gatherer;
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            launchpadRenderer.Dispose();
+        }
+
+        private void zoomInButton_Click(object sender, EventArgs e)
+        {
+            gathererRenderer.ZoomIn();
+        }
+
+        private void zoomOutButton_Click(object sender, EventArgs e)
+        {
+            gathererRenderer.ZoomOut();
         }
     }
 }

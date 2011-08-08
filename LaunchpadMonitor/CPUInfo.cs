@@ -62,28 +62,73 @@ namespace LaunchpadMonitor
 
                     perfCPUs.Add(perfCPU);
                 }
+                else
+                {
+                    perfCPU = new PerfCPU(managementObjectPerfProcessor, Socket);
+                    PerfCPUs.Add(perfCPU);
+                }
             }
+        }
+    
+        internal static List<CPU> CountCPUs()
+        {
+            List<CPU> cpus = new List<CPU>();
+            SelectQuery selectQuery = new SelectQuery("Win32_Processor");
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher(selectQuery);
+            CPU cpu = null;
+            uint socket = 1;
+            foreach(ManagementObject processor in searcher.Get())
+            {
+                cpu = new CPU(socket,
+                    (uint)processor["NumberOfCores"],
+                    (uint)processor["NumberOfLogicalProcessors"]);
+                cpus.Add(cpu);
+
+                socket++;
+            }
+            return cpus;
         }
     }
 
     class PerfCPU
     {
-        public string Name { get; set; }
-        public uint Core { get; set; }
-        public uint Socket { get; set; }
-        public uint HTModule { get; set; }
-        public bool HTEnabled { get; set; }
+        public string Name { get; private set; }
+        public uint Core { get; private set; }
+        public uint Socket { get; private set; }
+        public uint HTModule { get; private set; }
+        public bool HTEnabled { get; private set; }
+
+        public bool Total { get; private set; }
 
         public ManagementObjectSampler ManagementObjectSampler { get; private set; }
 
         public override string ToString()
         {
-            string str = "CPU " + Name + ": Socket " + Socket + " Core " + Core;
-            if (HTEnabled)
+
+            string str;
+
+            if (!Total)
             {
-                str = str + " HT Module " + HTModule;
+                str = "CPU " + Name + ": Socket " + Socket + " Core " + Core;
+                if (HTEnabled)
+                {
+                    str = str + " HT Module " + HTModule;
+                }
             }
+            else
+            {
+                str = "CPU Total: Socket " + Socket;
+            }
+
             return str;
+        }
+
+        public PerfCPU(ManagementObject managementObject, uint Socket)
+        {
+            this.ManagementObjectSampler = new ManagementObjectSampler(managementObject, "PercentProcessorTime");
+            this.Name = managementObject["Name"] as string;
+            this.Socket = Socket;
+            this.Total = true;
         }
 
         public PerfCPU(ManagementObject managementObject, uint Core, uint Socket)
@@ -93,6 +138,7 @@ namespace LaunchpadMonitor
             this.Core = Core;
             this.Socket = Socket;
             this.HTEnabled = false;
+            this.Total = false;
         }
 
         public PerfCPU(ManagementObject managementObject, uint Core, uint Socket, uint HTModule)
@@ -103,6 +149,7 @@ namespace LaunchpadMonitor
             this.Socket = Socket;
             this.HTModule = HTModule;
             this.HTEnabled = true;
+            this.Total = false;
         }
     }
 

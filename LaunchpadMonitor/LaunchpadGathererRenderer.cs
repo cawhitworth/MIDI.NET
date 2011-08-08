@@ -10,6 +10,8 @@ namespace LaunchpadMonitor
         Gatherer gatherer = null;
         ILaunchpad launchpad = null;
 
+        int scale;
+
         public Gatherer Gatherer { set { gatherer = value; } }
 
         Launchpad.Color orange = new Launchpad.Color(3, 3);
@@ -20,32 +22,74 @@ namespace LaunchpadMonitor
         public LaunchpadGathererRenderer(ILaunchpad launchpad)
         {
             this.launchpad = launchpad;
+            this.scale = 1;
 
+        }
+
+        public void ZoomOut()
+        {
+            scale++;
+        }
+
+        public void ZoomIn()
+        {
+            if (scale > 1) scale--;
+        }
+
+        public int Scale
+        {
+            get { return scale; }
         }
 
         public void Present()
         {
             if (gatherer != null)
             {
-                int[] lastEight = gatherer.LatestN(8).ToArray<int>();
+                int[] lastN = gatherer.LatestN(8 * scale).ToArray<int>();
+
                 launchpad.Clear();
+                
+                Launchpad.Color c;
+
                 for (int column = 0; column < 8; column++)
                 {
-                    lastEight[column] = (lastEight[column] * 2) / 25;
-                    for (int height = 0; height <= lastEight[column]; height++)
+                    int height = 0;
+                    try
                     {
-                        if (height <= 3)
+                        for (int index = 0; index < scale; index++)
                         {
-                            launchpad.Set(column, 7-height, green);
+                            height += lastN[column * scale + index];
                         }
-                        else if (height > 3 && height < 5)
+                        height = (height * 8) / (25 * scale); // 0 - 31
+                    }
+                    catch (System.IndexOutOfRangeException ex)
+                    {
+                        height = 0;
+                    }
+                    int y = 0;
+                    while (height > 0)
+                    {
+                        int intensity = height;
+                        if (height > 3)
                         {
-                            launchpad.Set(column, 7-height, orange);
+                            intensity = 3;
+                        }
+
+                        if (y < 3)
+                        {
+                            c = new Launchpad.Color(0, intensity) ;
+                        }
+                        else if (y >= 3 && y < 5)
+                        {
+                            c = new Launchpad.Color(intensity, intensity);
                         }
                         else 
                         {
-                            launchpad.Set(column, 7-height, red);
+                            c = new Launchpad.Color(intensity, 0) ;
                         }
+                        launchpad.Set(column, 7-y, c);
+                        height -= 4;
+                        y++;
                     }
                 }
 

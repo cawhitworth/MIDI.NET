@@ -55,6 +55,10 @@ namespace LaunchpadMonitor
         {
             lock (HistoryLock)
             {
+                if (count > history.Count)
+                {
+                    return history;
+                }
                 return history.GetRange(history.Count - count, count);
             }
         }
