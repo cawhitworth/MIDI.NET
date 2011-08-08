@@ -62,18 +62,9 @@ namespace Launchpad
             outDevice.SendShortMsg(0x000000b0);
         }
 
-        public byte Colour(int Green, int Red)
+        public void Set(int x, int y, Color color)
         {
-            return Colour(Green, Red, false, false);
-        }
-
-        public byte Colour(int Green, int Red, bool Copy, bool Clear)
-        {
-            if (Green < 0) Green = 0;
-            if (Green > 3) Green = 3;
-            if (Red < 0) Red =0;
-            if (Red > 3) Red = 3;
-            return (byte)(Red | (Copy ? 1 << 2 : 0) | (Clear ? 1 << 3 : 0) | (Green << 4));
+            Set(x, y, color.Byte);
         }
 
         public void Set(int x, int y, byte colour)

@@ -24,6 +24,9 @@ namespace ConwayLifeLaunchpad
 
             //life[0, 2] = life[1, 2] = life[2, 2] = life[2, 1] = life[1, 0] = true;
 
+            Color on = new Color(3, 3);
+            Color off = new Color(0, 0);
+
             using (Controller c = new Controller())
             {
                 c.Reset();
@@ -37,7 +40,7 @@ namespace ConwayLifeLaunchpad
                         {
                             if (life[x, y] != life.LastGeneration[x, y])
                             {
-                                c.Set(x, y, life[x, y] ? c.Colour(3, 3) : c.Colour(0, 0));
+                                c.Set(x, y, life[x, y] ? on : off);
                             }
                         }
                     }

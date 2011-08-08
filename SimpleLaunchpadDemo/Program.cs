@@ -26,7 +26,7 @@ namespace SimpleLaunchpadDemo
                 for (int repeat = 0; repeat < 10; repeat++ )
                     for (int x = 0; x < 8; x++)
                         for (int y = 0; y < 8; y++)
-                            controller.Set(x, y, controller.Colour(r.Next(4), r.Next(4)));
+                            controller.Set(x, y, new Color(r.Next(4), r.Next(4)));
 
                 controller.Reset();
 
